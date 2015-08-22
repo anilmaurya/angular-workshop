@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+    <script src="MOCK_DATA.json"></script>
+  </head>
+
+  <body ng-app="myapp">
+
+    <div ng-controller="StudentController" >
+        <h2> Student Table</h2>
+        <button ng-click="showAll()">Show All</button>
+        <input type="text" ng-model="filter_text">
+        <table>
+            <thead>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Country</th>
+                <th>Action</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in data | filter: filter_text" ng-hide="item.hide">
+                    <td>{{item.id}}</td>
+                    <td>{{item.first_name}}</td>
+                    <td>{{item.last_name}}</td>
+                    <td>{{item.email}}</td>
+                    <td>{{item.country}}</td>
+                    <td>
+                        <button ng-click="softDelete($index)">Soft Delete</button>
+                        <button ng-click="hardDelete($index)">Hard Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+      var module = angular.module("myapp", []);
+      module.controller("StudentController", function($scope) {
+          $scope.data = data;
+          $scope.softDelete = function(index){
+              item = $scope.data[index];
+              item.hide = true;  
+          };
+          $scope.hardDelete = function(index){
+            $scope.data.splice(index, 1)
+          };
+          $scope.showAll = function(){
+            angular.forEach($scope.data, function(data, index){ data.hide = false});
+          };
+      } );
+      module.filter('myFilter', function(){
+          return function(stringValue){
+            return stringValue.substring(0,3);
+        }
+      })
+    </script>
+
+  </body>
+</html>
+
